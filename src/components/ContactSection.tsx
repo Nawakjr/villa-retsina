@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { villa } from "@/data/villa";
 
 type Status = "idle" | "sending" | "ok" | "error";
 
@@ -62,21 +61,6 @@ export default function ContactSection() {
             Une question ? Envie de connaître nos disponibilités ? Écrivez-nous,
             nous vous répondons rapidement.
           </p>
-
-          <div className="mt-8 space-y-3 text-sm">
-            <a
-              href={`mailto:${villa.contact.email}`}
-              className="flex items-center gap-3 text-sable/90 transition hover:text-white"
-            >
-              <MailIcon /> {villa.contact.email}
-            </a>
-            <a
-              href={villa.contact.phoneHref}
-              className="flex items-center gap-3 text-sable/90 transition hover:text-white"
-            >
-              <PhoneIcon /> {villa.contact.phone}
-            </a>
-          </div>
         </div>
 
         {/* Formulaire */}
@@ -135,22 +119,5 @@ function Field({
       {...props}
       className={`rounded-xl border border-sable/20 bg-sable/5 px-4 py-3 text-sm text-sable placeholder:text-sable/45 outline-none transition focus:border-olive focus:bg-sable/10 ${className}`}
     />
-  );
-}
-
-function MailIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4 text-olive" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-      <rect x="3" y="5" width="18" height="14" rx="2" />
-      <path d="m3 7 9 6 9-6" />
-    </svg>
-  );
-}
-
-function PhoneIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="h-4 w-4 text-olive" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
-      <path d="M5 4h4l2 5-3 2a12 12 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" />
-    </svg>
   );
 }
