@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+/* ──────────────────────────────────────────────
+   Villa Retsina — design tokens (Tailwind v4 @theme)
+   Palette méditerranéenne : sable, mer, olive, bois, anthracite
+   ────────────────────────────────────────────── */
+@theme {
+  --color-sable: #f7f1e7;
+  --color-sable-deep: #efe6d6;
+  --color-mer: #8fb8c8;
+  --color-mer-deep: #6c9fb2;
+  --color-olive: #7c8a5a;
+  --color-olive-deep: #67744a;
+  --color-bois: #8a5a3c;
+  --color-anthracite: #243039;
+
+  --font-serif: var(--font-cormorant), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), system-ui, -apple-system, sans-serif;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #243039;
+}
+
+html {
+  scrollbar-gutter: stable;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Respecte les préférences d'accessibilité : pas d'animations si demandé */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Petit trait décoratif réutilisable */
+.rule-deco {
+  display: inline-block;
+  width: 3rem;
+  height: 2px;
+  background: var(--color-olive);
+}
+
+/* Apparition douce du slider hero */
+@keyframes retsinaFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
