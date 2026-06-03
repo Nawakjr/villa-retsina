@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { isAuthed } from "@/lib/auth";
-import { setPricing } from "@/lib/store";
+import { setPricing, storageInfo } from "@/lib/store";
 import type { PriceRow } from "@/data/pricing";
+
+const STORAGE_ERROR =
+  "Stockage non configuré. Connectez un store KV au projet sur Vercel (Storage → créer/connecter un KV) pour pouvoir enregistrer.";
 
 function str(v: unknown, max = 120): string {
   return String(v ?? "").trim().slice(0, max);
@@ -48,7 +51,17 @@ export async function POST(req: Request) {
     );
   }
 
-  await setPricing({ rows, note });
+  try {
+    await setPricing({ rows, note });
+  } catch (e) {
+    console.error("setPricing:", e);
+    const fileBackend = storageInfo().backend === "file";
+    return NextResponse.json(
+      { ok: false, error: fileBackend ? STORAGE_ERROR : "Échec de l'enregistrement (stockage)." },
+      { status: 503 },
+    );
+  }
+
   revalidatePath("/");
   return NextResponse.json({ ok: true });
 }

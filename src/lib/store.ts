@@ -23,8 +23,24 @@ export type PricingStore = { rows: PriceRow[]; note: string };
 const KEY_AVAIL = "villa:availability";
 const KEY_PRICING = "villa:pricing";
 
-const useKV = !!process.env.KV_REST_API_URL;
+// Supporte les deux conventions de nommage : Vercel KV et intégration Upstash.
+const KV_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+const KV_TOKEN =
+  process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+const useKV = !!(KV_URL && KV_TOKEN);
+
 const FILE = path.join(process.cwd(), ".data", "store.json");
+
+/**
+ * Indique le backend utilisé et s'il est accessible en écriture.
+ * En production, le backend fichier n'est PAS inscriptible (FS en lecture
+ * seule sur Vercel) : il faut connecter un store KV.
+ */
+export function storageInfo() {
+  const backend = useKV ? "kv" : "file";
+  const writable = useKV || process.env.NODE_ENV !== "production";
+  return { backend, writable } as const;
+}
 
 /* ── Backend fichier (dev) ── */
 async function fileReadAll(): Promise<Record<string, unknown>> {
@@ -43,13 +59,17 @@ async function fileWrite(key: string, value: unknown) {
   await writeFile(FILE, JSON.stringify(all, null, 2), "utf8");
 }
 
-/* ── Backend Vercel KV (prod) ── */
+/* ── Backend Vercel KV / Upstash (prod) ── */
+async function kvClient() {
+  const { createClient } = await import("@vercel/kv");
+  return createClient({ url: KV_URL as string, token: KV_TOKEN as string });
+}
 async function kvGet<T>(key: string): Promise<T | null> {
-  const { kv } = await import("@vercel/kv");
+  const kv = await kvClient();
   return (await kv.get<T>(key)) ?? null;
 }
 async function kvSet<T>(key: string, value: T) {
-  const { kv } = await import("@vercel/kv");
+  const kv = await kvClient();
   await kv.set(key, value);
 }
 

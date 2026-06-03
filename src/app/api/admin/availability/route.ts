@@ -1,8 +1,11 @@
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { isAuthed } from "@/lib/auth";
-import { setAvailability } from "@/lib/store";
+import { setAvailability, storageInfo } from "@/lib/store";
 import type { DayStatus } from "@/data/availability";
+
+const STORAGE_ERROR =
+  "Stockage non configuré. Connectez un store KV au projet sur Vercel (Storage → créer/connecter un KV) pour pouvoir enregistrer.";
 
 const VALID: DayStatus[] = ["disponible", "reserve", "confirmer"];
 
@@ -49,7 +52,19 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: false, error: "Trop de dates." }, { status: 400 });
   }
 
-  await setAvailability({ dates: clean });
+  try {
+    await setAvailability({ dates: clean });
+  } catch (e) {
+    console.error("setAvailability:", e);
+    // Échec d'écriture : sur Vercel sans store KV, le backend fichier n'est
+    // pas inscriptible (FS en lecture seule) → message explicite.
+    const fileBackend = storageInfo().backend === "file";
+    return NextResponse.json(
+      { ok: false, error: fileBackend ? STORAGE_ERROR : "Échec de l'enregistrement (stockage)." },
+      { status: 503 },
+    );
+  }
+
   revalidatePath("/");
   return NextResponse.json({ ok: true });
 }

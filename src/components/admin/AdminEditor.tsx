@@ -93,7 +93,8 @@ export default function AdminEditor({
       });
       const data = await res.json();
       setAvailMsg(res.ok && data.ok ? "Disponibilités enregistrées ✓" : data.error || "Erreur.");
-    } catch {
+    } catch (e) {
+      console.error("saveAvailability:", e);
       setAvailMsg("Erreur réseau.");
     } finally {
       setAvailSaving(false);
@@ -111,7 +112,8 @@ export default function AdminEditor({
       });
       const data = await res.json();
       setPriceMsg(res.ok && data.ok ? "Tarifs enregistrés ✓" : data.error || "Erreur.");
-    } catch {
+    } catch (e) {
+      console.error("savePricing:", e);
       setPriceMsg("Erreur réseau.");
     } finally {
       setPriceSaving(false);

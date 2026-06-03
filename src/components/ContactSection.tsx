@@ -16,7 +16,10 @@ export default function ContactSection() {
     setStatus("sending");
     setError("");
 
-    const fd = new FormData(e.currentTarget);
+    // On capture le formulaire AVANT l'await : après, React remet
+    // e.currentTarget à null (ce qui faisait planter form.reset()).
+    const form = e.currentTarget;
+    const fd = new FormData(form);
     const payload = {
       type: "contact",
       name: String(fd.get("name") || ""),
@@ -42,7 +45,7 @@ export default function ContactSection() {
         return;
       }
       setStatus("ok");
-      e.currentTarget.reset();
+      form.reset();
     } catch {
       setError("Connexion impossible. Réessayez plus tard.");
       setStatus("error");
@@ -111,7 +114,7 @@ export default function ContactSection() {
             </button>
 
             {status === "ok" && (
-              <p className="text-sm text-olive">Merci ! Votre message a bien été envoyé.</p>
+              <p className="text-sm text-olive">Merci, votre demande a bien été envoyée.</p>
             )}
             {status === "error" && (
               <p className="text-sm text-[#e0a17f]">{error}</p>
