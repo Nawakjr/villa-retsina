@@ -85,6 +85,8 @@ export const villa = {
   location: {
     village: "Kamilari",
     region: "Crète du Sud",
+    lat: 35.03632,
+    lng: 24.78842,
   },
   contact: {
     email: "contact@villa-retsina.com",

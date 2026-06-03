@@ -2,7 +2,7 @@ import Link from "next/link";
 import { villa } from "@/data/villa";
 
 export default function Footer() {
-  const year = 2025;
+  const year = 2026;
   return (
     <footer className="bg-olive-deep text-sable/90">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-6 py-6 text-[13px] sm:flex-row">

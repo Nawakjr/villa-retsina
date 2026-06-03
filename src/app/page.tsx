@@ -6,6 +6,7 @@ import Gallery from "@/components/Gallery";
 import KamilariSection from "@/components/KamilariSection";
 import PricingSection from "@/components/PricingSection";
 import AvailabilitySection from "@/components/AvailabilitySection";
+import AccessSection from "@/components/AccessSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import { getAvailability, getPricing } from "@/lib/store";
@@ -37,6 +38,7 @@ export default async function Home() {
         </div>
       </section>
 
+      <AccessSection />
       <ContactSection />
       <Footer />
     </main>

@@ -41,12 +41,7 @@ export default function MentionsLegales() {
               Contact :{" "}
               <a className="text-olive-deep underline" href={`mailto:${villa.contact.email}`}>
                 {villa.contact.email}
-              </a>{" "}
-              — {villa.contact.phone}
-            </p>
-            <p className="mt-2 text-anthracite/55">
-              [À compléter : nom/raison sociale, adresse postale, numéro
-              d&apos;immatriculation le cas échéant.]
+              </a>
             </p>
           </Section>
 
