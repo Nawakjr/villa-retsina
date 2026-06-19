@@ -1,4 +1,4 @@
-export const locales = ["fr", "en", "de", "es", "it"] as const;
+export const locales = ["fr", "en", "de", "es", "it", "el"] as const;
 export type Locale = (typeof locales)[number];
 
 export const defaultLocale: Locale = "fr";
@@ -10,6 +10,17 @@ export const localeNames: Record<Locale, string> = {
   de: "Deutsch",
   es: "Español",
   it: "Italiano",
+  el: "Ελληνικά",
+};
+
+/** Drapeau (emoji) affiché devant chaque langue dans le sélecteur. */
+export const localeFlags: Record<Locale, string> = {
+  fr: "🇫🇷",
+  en: "🇬🇧",
+  de: "🇩🇪",
+  es: "🇪🇸",
+  it: "🇮🇹",
+  el: "🇬🇷",
 };
 
 export function isLocale(value: string): value is Locale {
@@ -23,6 +34,7 @@ export const htmlLang: Record<Locale, string> = {
   de: "de-DE",
   es: "es-ES",
   it: "it-IT",
+  el: "el-GR",
 };
 
 /** Préfixe d'URL d'une locale ("" pour la langue par défaut). */

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { locales, localeNames, localePath, type Locale } from "@/i18n/config";
+import { locales, localeNames, localeFlags, localePath, type Locale } from "@/i18n/config";
 import type { Content } from "@/i18n/content";
 
 type Props = {
@@ -94,10 +94,11 @@ export default function Navbar({ locale, villaName, nav, labels }: Props) {
                 key={l}
                 href={localePath(l) || "/"}
                 className={[
-                  "text-sm font-medium uppercase tracking-[0.12em]",
+                  "flex items-center gap-2 text-sm font-medium uppercase tracking-[0.12em]",
                   l === locale ? "text-olive-deep" : "text-anthracite/60",
                 ].join(" ")}
               >
+                <span aria-hidden="true">{localeFlags[l]}</span>
                 {localeNames[l]}
               </a>
             ))}
@@ -136,10 +137,11 @@ function LanguageSwitcher({
             key={l}
             href={localePath(l) || "/"}
             className={[
-              "block rounded-lg px-3 py-2 text-sm transition hover:bg-sable",
+              "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm transition hover:bg-sable",
               l === current ? "font-semibold text-olive-deep" : "text-anthracite/80",
             ].join(" ")}
           >
+            <span aria-hidden="true">{localeFlags[l]}</span>
             {localeNames[l]}
           </a>
         ))}

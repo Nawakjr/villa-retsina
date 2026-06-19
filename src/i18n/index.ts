@@ -4,8 +4,9 @@ import { en } from "./dictionaries/en";
 import { de } from "./dictionaries/de";
 import { es } from "./dictionaries/es";
 import { it } from "./dictionaries/it";
+import { el } from "./dictionaries/el";
 
-const dictionaries: Record<Locale, Dictionary> = { fr, en, de, es, it };
+const dictionaries: Record<Locale, Dictionary> = { fr, en, de, es, it, el };
 
 export function getDictionary(locale: Locale): Dictionary {
   return dictionaries[locale];

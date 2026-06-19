@@ -8,6 +8,7 @@ const OG_LOCALE: Record<Locale, string> = {
   de: "de_DE",
   es: "es_ES",
   it: "it_IT",
+  el: "el_GR",
 };
 
 /** Construit les alternates hreflang pour toutes les langues. */
