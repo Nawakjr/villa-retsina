@@ -1,9 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { nav, villa } from "@/data/villa";
+import { locales, localeNames, localePath, type Locale } from "@/i18n/config";
+import type { Content } from "@/i18n/content";
 
-export default function Navbar() {
+type Props = {
+  locale: Locale;
+  villaName: string;
+  nav: Content["nav"];
+  labels: { openMenu: string; closeMenu: string; language: string };
+};
+
+export default function Navbar({ locale, villaName, nav, labels }: Props) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -15,6 +23,7 @@ export default function Navbar() {
   }, []);
 
   const solid = scrolled || open;
+  const home = localePath(locale) || "/";
 
   return (
     <header
@@ -27,14 +36,14 @@ export default function Navbar() {
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <a
-          href="#accueil"
+          href={home}
           className={[
             "flex items-center gap-2 font-serif text-xl tracking-wide transition-colors",
             solid ? "text-anthracite" : "text-white",
           ].join(" ")}
         >
           <LeafMark className="h-5 w-5 text-olive" />
-          <span>{villa.name}</span>
+          <span>{villaName}</span>
         </a>
 
         {/* Desktop */}
@@ -51,18 +60,16 @@ export default function Navbar() {
               {item.label}
             </a>
           ))}
+          <LanguageSwitcher current={locale} solid={solid} label={labels.language} />
         </nav>
 
         {/* Burger */}
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
+          aria-label={open ? labels.closeMenu : labels.openMenu}
           aria-expanded={open}
-          className={[
-            "md:hidden",
-            solid ? "text-anthracite" : "text-white",
-          ].join(" ")}
+          className={["md:hidden", solid ? "text-anthracite" : "text-white"].join(" ")}
         >
           {open ? <CloseIcon /> : <MenuIcon />}
         </button>
@@ -81,9 +88,72 @@ export default function Navbar() {
               {item.label}
             </a>
           ))}
+          <div className="flex flex-wrap gap-x-4 gap-y-2 pt-4">
+            {locales.map((l) => (
+              <a
+                key={l}
+                href={localePath(l) || "/"}
+                className={[
+                  "text-sm font-medium uppercase tracking-[0.12em]",
+                  l === locale ? "text-olive-deep" : "text-anthracite/60",
+                ].join(" ")}
+              >
+                {localeNames[l]}
+              </a>
+            ))}
+          </div>
         </nav>
       )}
     </header>
+  );
+}
+
+function LanguageSwitcher({
+  current,
+  solid,
+  label,
+}: {
+  current: Locale;
+  solid: boolean;
+  label: string;
+}) {
+  return (
+    <div className="group relative">
+      <button
+        type="button"
+        aria-label={label}
+        className={[
+          "flex items-center gap-1.5 text-[13px] font-medium uppercase tracking-[0.12em] transition-opacity hover:opacity-60",
+          solid ? "text-anthracite" : "text-white",
+        ].join(" ")}
+      >
+        <GlobeIcon className="h-4 w-4" />
+        {current.toUpperCase()}
+      </button>
+      <div className="invisible absolute right-0 top-full z-50 mt-2 min-w-[9rem] rounded-xl border border-anthracite/10 bg-white p-1.5 opacity-0 shadow-lg transition-all duration-150 group-hover:visible group-hover:opacity-100">
+        {locales.map((l) => (
+          <a
+            key={l}
+            href={localePath(l) || "/"}
+            className={[
+              "block rounded-lg px-3 py-2 text-sm transition hover:bg-sable",
+              l === current ? "font-semibold text-olive-deep" : "text-anthracite/80",
+            ].join(" ")}
+          >
+            {localeNames[l]}
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function GlobeIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" className={className} aria-hidden="true">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M3 12h18M12 3c2.5 2.5 2.5 15 0 18M12 3c-2.5 2.5-2.5 15 0 18" />
+    </svg>
   );
 }
 

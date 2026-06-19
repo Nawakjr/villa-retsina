@@ -1,42 +1,39 @@
 import RevealOnView from "@/components/RevealOnView";
-import { villa } from "@/data/villa";
+import type { Content } from "@/i18n/content";
 
-const { lat, lng } = villa.location;
-const WAZE_URL = `https://waze.com/ul?ll=${lat},${lng}&navigate=yes`;
-const GMAPS_URL = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+export default function AccessSection({ access }: { access: Content["access"] }) {
+  const { lat, lng } = access.coords;
+  const wazeUrl = `https://waze.com/ul?ll=${lat},${lng}&navigate=yes`;
+  const gmapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
 
-export default function AccessSection() {
   return (
     <section id="acces" className="scroll-mt-20 bg-white">
       <RevealOnView className="mx-auto max-w-3xl px-6 py-20 text-center sm:py-24">
-        <h2 className="font-serif text-4xl text-anthracite sm:text-5xl">
-          Venir à la Villa Retsina
-        </h2>
+        <h2 className="font-serif text-4xl text-anthracite sm:text-5xl">{access.heading}</h2>
         <span className="rule-deco mt-5" />
 
         <p className="mx-auto mt-5 max-w-xl text-[15px] leading-relaxed text-anthracite/65">
-          La villa se situe à {villa.location.village}, en {villa.location.region}.
-          Lancez votre itinéraire en un clic.
+          {access.intro}
         </p>
 
         <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <a
-            href={WAZE_URL}
+            href={wazeUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-olive px-7 py-3.5 text-sm font-medium uppercase tracking-[0.12em] text-white transition hover:bg-olive-deep sm:w-auto"
           >
             <NavIcon className="h-[18px] w-[18px]" />
-            Itinéraire Waze
+            {access.waze}
           </a>
           <a
-            href={GMAPS_URL}
+            href={gmapsUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex w-full items-center justify-center gap-2.5 rounded-full border border-anthracite/20 px-7 py-3.5 text-sm font-medium uppercase tracking-[0.12em] text-anthracite transition hover:bg-sable sm:w-auto"
           >
             <PinIcon className="h-[18px] w-[18px]" />
-            Google Maps
+            {access.gmaps}
           </a>
         </div>
 

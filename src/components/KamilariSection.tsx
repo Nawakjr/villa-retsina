@@ -2,13 +2,18 @@ import Media from "@/components/Media";
 import Icon from "@/components/Icons";
 import RevealOnView from "@/components/RevealOnView";
 import PhotoGrid from "@/components/PhotoGrid";
-import { kamilari, surroundings } from "@/data/villa";
+import type { Content } from "@/i18n/content";
 
-export default function KamilariSection() {
+export default function KamilariSection({
+  kamilari,
+  lightbox,
+}: {
+  kamilari: Content["kamilari"];
+  lightbox: Content["lightbox"];
+}) {
   return (
     <section id="kamilari" className="scroll-mt-20 bg-white">
       <div className="grid items-center gap-0 md:grid-cols-2">
-        {/* Image pleine hauteur */}
         <Media
           src={kamilari.src}
           alt={kamilari.alt}
@@ -17,7 +22,6 @@ export default function KamilariSection() {
           sizes="(max-width: 768px) 100vw, 50vw"
         />
 
-        {/* Texte */}
         <RevealOnView className="px-6 py-16 md:px-14 lg:px-20">
           <h2 className="font-serif text-3xl text-anthracite sm:text-4xl">
             {kamilari.title}
@@ -46,17 +50,18 @@ export default function KamilariSection() {
       <div className="mx-auto max-w-6xl px-6 pb-20 pt-16 sm:pb-24">
         <div className="mb-10 text-center">
           <h3 className="font-serif text-3xl text-anthracite sm:text-4xl">
-            Kamilari &amp; alentours
+            {kamilari.galleryHeading}
           </h3>
           <span className="rule-deco mt-5" />
           <p className="mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-anthracite/60">
-            Le village, ses fêtes, les plages du sud de la Crète et les sites
-            antiques à quelques minutes.
+            {kamilari.gallerySubtitle}
           </p>
         </div>
 
         <PhotoGrid
-          items={surroundings}
+          items={kamilari.surroundings}
+          zoomLabel={lightbox.zoom}
+          lightboxLabels={lightbox}
           gridClassName="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4"
         />
       </div>

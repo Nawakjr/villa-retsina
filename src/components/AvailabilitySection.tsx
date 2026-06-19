@@ -2,19 +2,12 @@
 
 import { useMemo, useState } from "react";
 import {
-  availabilityNote,
   defaultMonth,
   statusDot,
-  statusLabels,
   statusStyles,
   type DayStatus,
 } from "@/data/availability";
-
-const MONTHS = [
-  "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-  "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre",
-];
-const WEEKDAYS = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
+import type { Content } from "@/i18n/content";
 
 function pad(n: number) {
   return String(n).padStart(2, "0");
@@ -22,13 +15,14 @@ function pad(n: number) {
 
 /** Lundi = 0 … Dimanche = 6 */
 function mondayIndex(year: number, month: number) {
-  const js = new Date(year, month, 1).getDay(); // 0 = dimanche
-  return (js + 6) % 7;
+  return (new Date(year, month, 1).getDay() + 6) % 7;
 }
 
 export default function AvailabilitySection({
+  labels,
   availability,
 }: {
+  labels: Content["availability"];
   availability: Record<string, DayStatus>;
 }) {
   const [{ year, month }, setView] = useState(defaultMonth);
@@ -53,40 +47,38 @@ export default function AvailabilitySection({
     });
   };
 
+  const statusOrder: DayStatus[] = ["disponible", "reserve", "confirmer"];
+
   return (
     <div id="disponibilites" className="scroll-mt-24">
-      <h2 className="font-serif text-3xl text-anthracite sm:text-4xl">
-        Disponibilités
-      </h2>
+      <h2 className="font-serif text-3xl text-anthracite sm:text-4xl">{labels.heading}</h2>
       <span className="rule-deco mt-4" />
 
       <div className="mt-8 rounded-2xl border border-anthracite/10 bg-white p-5 sm:p-6">
-        {/* Entête mois */}
         <div className="mb-4 flex items-center justify-between">
           <button
             type="button"
             onClick={() => go(-1)}
-            aria-label="Mois précédent"
+            aria-label={labels.prevMonth}
             className="flex h-9 w-9 items-center justify-center rounded-full text-anthracite/60 transition hover:bg-sable hover:text-anthracite"
           >
             ‹
           </button>
           <span className="font-serif text-lg text-anthracite">
-            {MONTHS[month]} {year}
+            {labels.months[month]} {year}
           </span>
           <button
             type="button"
             onClick={() => go(1)}
-            aria-label="Mois suivant"
+            aria-label={labels.nextMonth}
             className="flex h-9 w-9 items-center justify-center rounded-full text-anthracite/60 transition hover:bg-sable hover:text-anthracite"
           >
             ›
           </button>
         </div>
 
-        {/* Grille */}
         <div className="grid grid-cols-7 gap-1.5 text-center">
-          {WEEKDAYS.map((w) => (
+          {labels.weekdays.map((w) => (
             <div
               key={w}
               className="pb-1 text-[11px] font-semibold uppercase tracking-wide text-anthracite/45"
@@ -99,7 +91,7 @@ export default function AvailabilitySection({
               <div
                 key={i}
                 className={`flex aspect-square items-center justify-center rounded-lg text-sm ${statusStyles[cell.status]}`}
-                title={statusLabels[cell.status]}
+                title={labels.status[cell.status]}
               >
                 {cell.day}
               </div>
@@ -109,18 +101,17 @@ export default function AvailabilitySection({
           )}
         </div>
 
-        {/* Légende */}
         <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-anthracite/10 pt-4 text-[13px] text-anthracite/70">
-          {(Object.keys(statusLabels) as DayStatus[]).map((s) => (
+          {statusOrder.map((s) => (
             <span key={s} className="flex items-center gap-2">
               <span className={`h-2.5 w-2.5 rounded-full ${statusDot[s]}`} />
-              {statusLabels[s]}
+              {labels.status[s]}
             </span>
           ))}
         </div>
       </div>
 
-      <p className="mt-4 text-[13px] italic text-anthracite/55">{availabilityNote}</p>
+      <p className="mt-4 text-[13px] italic text-anthracite/55">{labels.note}</p>
     </div>
   );
 }

@@ -4,9 +4,17 @@ import { useCallback, useEffect } from "react";
 import Media from "@/components/Media";
 import type { GalleryItem } from "@/data/villa";
 
+export type LightboxLabels = {
+  label: string;
+  close: string;
+  prev: string;
+  next: string;
+};
+
 type Props = {
   items: GalleryItem[];
   index: number;
+  labels: LightboxLabels;
   onClose: () => void;
   onIndexChange: (i: number) => void;
 };
@@ -15,7 +23,7 @@ type Props = {
  * Lightbox plein écran, légère et sans dépendance externe.
  * Échap pour fermer, flèches ← → pour naviguer, fermeture au clic sur le fond.
  */
-export default function Lightbox({ items, index, onClose, onIndexChange }: Props) {
+export default function Lightbox({ items, index, labels, onClose, onIndexChange }: Props) {
   const count = items.length;
 
   const prev = useCallback(
@@ -27,7 +35,6 @@ export default function Lightbox({ items, index, onClose, onIndexChange }: Props
     [index, count, onIndexChange],
   );
 
-  // Clavier : Échap / flèches
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -38,7 +45,6 @@ export default function Lightbox({ items, index, onClose, onIndexChange }: Props
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose, prev, next]);
 
-  // Verrouille le scroll de la page tant que la lightbox est ouverte
   useEffect(() => {
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -53,15 +59,14 @@ export default function Lightbox({ items, index, onClose, onIndexChange }: Props
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="Galerie photo"
+      aria-label={labels.label}
       onClick={onClose}
       className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-anthracite/90 backdrop-blur-sm [animation:retsinaFade_0.25s_ease-out]"
     >
-      {/* Fermer */}
       <button
         type="button"
         onClick={onClose}
-        aria-label="Fermer"
+        aria-label={labels.close}
         className="absolute right-4 top-4 z-10 flex h-11 w-11 items-center justify-center rounded-full text-white/80 transition hover:bg-white/10 hover:text-white"
       >
         <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
@@ -69,7 +74,6 @@ export default function Lightbox({ items, index, onClose, onIndexChange }: Props
         </svg>
       </button>
 
-      {/* Précédent */}
       {count > 1 && (
         <button
           type="button"
@@ -77,7 +81,7 @@ export default function Lightbox({ items, index, onClose, onIndexChange }: Props
             e.stopPropagation();
             prev();
           }}
-          aria-label="Photo précédente"
+          aria-label={labels.prev}
           className="absolute left-2 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full text-white/80 transition hover:bg-white/10 hover:text-white sm:left-5"
         >
           <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
@@ -86,7 +90,6 @@ export default function Lightbox({ items, index, onClose, onIndexChange }: Props
         </button>
       )}
 
-      {/* Suivant */}
       {count > 1 && (
         <button
           type="button"
@@ -94,7 +97,7 @@ export default function Lightbox({ items, index, onClose, onIndexChange }: Props
             e.stopPropagation();
             next();
           }}
-          aria-label="Photo suivante"
+          aria-label={labels.next}
           className="absolute right-2 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full text-white/80 transition hover:bg-white/10 hover:text-white sm:right-5"
         >
           <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true">
@@ -103,7 +106,6 @@ export default function Lightbox({ items, index, onClose, onIndexChange }: Props
         </button>
       )}
 
-      {/* Image (le clic dessus ne ferme pas) */}
       <figure
         onClick={(e) => e.stopPropagation()}
         className="flex max-h-[88vh] w-[92vw] max-w-5xl flex-col items-center gap-4"

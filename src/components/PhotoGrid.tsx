@@ -3,21 +3,20 @@
 import { useState } from "react";
 import Media from "@/components/Media";
 import RevealOnView from "@/components/RevealOnView";
-import Lightbox from "@/components/Lightbox";
+import Lightbox, { type LightboxLabels } from "@/components/Lightbox";
 import type { GalleryItem } from "@/data/villa";
 
-/**
- * Grille de photos cliquables + lightbox. Réutilisée par la Galerie de la villa
- * et par la galerie « alentours » de la section Kamilari.
- */
 export default function PhotoGrid({
   items,
+  zoomLabel,
+  lightboxLabels,
   gridClassName = "grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3",
   firstWide = false,
 }: {
   items: GalleryItem[];
+  zoomLabel: string;
+  lightboxLabels: LightboxLabels;
   gridClassName?: string;
-  /** Première vignette sur 2 colonnes en mobile (mise en avant). */
   firstWide?: boolean;
 }) {
   const [open, setOpen] = useState(false);
@@ -40,7 +39,7 @@ export default function PhotoGrid({
             <button
               type="button"
               onClick={() => openAt(i)}
-              aria-label={`Agrandir : ${item.alt}`}
+              aria-label={`${zoomLabel} : ${item.alt}`}
               className="group block w-full cursor-pointer overflow-hidden rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-olive focus-visible:ring-offset-2"
             >
               <Media
@@ -60,6 +59,7 @@ export default function PhotoGrid({
         <Lightbox
           items={items}
           index={index}
+          labels={lightboxLabels}
           onClose={() => setOpen(false)}
           onIndexChange={setIndex}
         />

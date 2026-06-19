@@ -1,9 +1,11 @@
 import Media from "@/components/Media";
 import Icon from "@/components/Icons";
 import RevealOnView from "@/components/RevealOnView";
-import { levels, type Level } from "@/data/villa";
+import type { Content } from "@/i18n/content";
 
-export default function LevelsSection() {
+type Level = Content["levels"][number];
+
+export default function LevelsSection({ levels }: { levels: Content["levels"] }) {
   return (
     <section id="la-villa" className="scroll-mt-20 bg-white">
       <div className="mx-auto max-w-6xl px-6 py-20 sm:py-28">
@@ -42,10 +44,7 @@ function LevelCard({ level }: { level: Level }) {
 
       <ul className="mt-7 grid grid-cols-1 gap-x-8 gap-y-3.5 sm:grid-cols-2">
         {level.features.map((f) => (
-          <li
-            key={f.label}
-            className="flex items-center gap-3 text-[15px] text-anthracite/85"
-          >
+          <li key={f.label} className="flex items-center gap-3 text-[15px] text-anthracite/85">
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sable text-olive-deep">
               <Icon name={f.icon} className="h-[18px] w-[18px]" />
             </span>
