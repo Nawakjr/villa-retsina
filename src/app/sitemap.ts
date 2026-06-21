@@ -20,5 +20,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     });
   }
 
+  entries.push({
+    url: `${SITE_URL}/trip`,
+    changeFrequency: "monthly",
+    priority: 0.6,
+  });
+
   return entries;
 }

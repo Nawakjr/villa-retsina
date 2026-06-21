@@ -20,9 +20,15 @@ export default function Footer({
         <p>
           © {year} {villaName} — {footer.place} — {footer.rights}
         </p>
-        <Link href={legalHref} className="transition hover:text-white">
-          {footer.legal}
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link href="/trip" className="transition hover:text-white">
+            Road trip
+          </Link>
+          <span aria-hidden="true" className="text-sable/40">·</span>
+          <Link href={legalHref} className="transition hover:text-white">
+            {footer.legal}
+          </Link>
+        </div>
       </div>
     </footer>
   );
