@@ -26,6 +26,9 @@ yarn-error.log*
 # admin store (backend fichier en dev)
 /.data
 
+# Ne jamais publier de PDF servi statiquement (peut contenir des infos privées)
+/public/**/*.pdf
+
 # vercel
 .vercel
 
